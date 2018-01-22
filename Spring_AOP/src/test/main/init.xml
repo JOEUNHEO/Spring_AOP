@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	<!-- MemberServiceImpl 객체를 bean으로 만들기 -->
+   <bean class="test.service.MemberServiceImpl" />
+   <bean class="test.service.BoardServiceImpl" />
+   <!-- PrintLogAspect 객체를 bean으로 만들고 id 부여 -->
+   <bean id="myAspect" class="test.aspect.PrintLogAspect"/>
+   <!-- aop 설정 -->
+   <aop:config>
+   <!-- Spring bean에서 관리하는 객체 중에서 insert()메소드가 수행될 때 myAspect안에 있는 printLog 메소드를 주변에 적용하라
+       around : 앞뒤에서 적용-->
+      <aop:pointcut expression="execution(public void insert())" id="myPoint"/>
+      <aop:pointcut expression="execution(public void select())" id="myPoint1"/>
+      <aop:aspect ref="myAspect">
+         <aop:around method="printLog" pointcut-ref="myPoint"/>
+      </aop:aspect>
+      <aop:aspect ref="myAspect">
+         <aop:around method="printLog2" pointcut-ref="myPoint1"/>
+      </aop:aspect>
+   </aop:config>
+
+</beans>
